@@ -30,13 +30,21 @@ world.playSfx = playSfx;
 world.getSprite = getSprite;
 world.drawFrame = drawSpriteFrame;
 
-loadAudio().catch((e) => {
+globalThis.Wavedash?.updateLoadProgressZeroToOne(0);
+let _loadsRemaining = 2;
+function _markLoaded() {
+  _loadsRemaining -= 1;
+  globalThis.Wavedash?.updateLoadProgressZeroToOne((2 - _loadsRemaining) / 2);
+}
+loadAudio().then(_markLoaded, (e) => {
   console.warn('audio load failed', e);
   playables.logError();
+  _markLoaded();
 });
-loadAssets().catch((e) => {
+loadAssets().then(_markLoaded, (e) => {
   console.warn('asset load failed', e);
   playables.logError();
+  _markLoaded();
 });
 
 world.particles = Particles({ context, max: 200 });
@@ -134,6 +142,7 @@ const loop = GameLoop({
         if (!_gameReadyAnnounced) {
           _gameReadyAnnounced = true;
           playables.gameReady();
+          globalThis.Wavedash?.init({ debug: false });
         }
       });
     }

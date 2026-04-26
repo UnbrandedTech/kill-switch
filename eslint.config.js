@@ -19,6 +19,7 @@ export default [
         localStorage: 'readonly',
         globalThis: 'readonly',
         ytgame: 'readonly',
+        Wavedash: 'readonly',
         navigator: 'readonly',
         HTMLCanvasElement: 'readonly',
         CanvasRenderingContext2D: 'readonly'
