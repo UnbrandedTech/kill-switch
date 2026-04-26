@@ -1,4 +1,4 @@
 game_id = "j97brxc6ngtkk07qges1bebt2h85jrq9"
-upload_dir = "."
+upload_dir = "./dist"
 
 entrypoint = "index.html"

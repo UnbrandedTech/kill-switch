@@ -35,7 +35,15 @@ const _elements = {};
 let _loadingPromise = null;
 
 function loadOne(name, url) {
-  return new Promise((resolve, reject) => {
+  // Fetch as a full blob first so the audio element gets a blob: URL it can
+  // load without Range requests — Wavedash's service worker (and others)
+  // often mishandle ranged audio.
+  const isBlob = url.startsWith('blob:');
+  const blobUrl = isBlob ? Promise.resolve(url) : fetch(url).then(r => {
+    if (!r.ok) throw Error(`audio "${name}" HTTP ${r.status}`);
+    return r.blob().then(b => URL.createObjectURL(b));
+  });
+  return blobUrl.then(src => new Promise((resolve, reject) => {
     const el = new Audio();
     el.preload = 'auto';
     el.addEventListener('canplaythrough', () => {
@@ -43,9 +51,9 @@ function loadOne(name, url) {
       resolve();
     }, { once: true });
     el.addEventListener('error', () => reject(Error(`audio "${name}" failed to load`)), { once: true });
-    el.src = url;
+    el.src = src;
     el.load();
-  });
+  }));
 }
 
 export function loadAudio() {

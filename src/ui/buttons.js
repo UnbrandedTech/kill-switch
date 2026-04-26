@@ -106,7 +106,8 @@ export function makeText({
   text,
   font = FONT,
   color = '#fff',
-  anchor = { x: 0.5, y: 0.5 }
+  anchor = { x: 0.5, y: 0.5 },
+  textAlign = 'left'
 }) {
-  return Text({ x, y, text, font, color, anchor });
+  return Text({ x, y, text, font, color, anchor, textAlign });
 }
