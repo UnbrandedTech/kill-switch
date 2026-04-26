@@ -23,7 +23,7 @@ export function attachInput(canvas) {
     const p = canvasPointFromEvent(e);
     _move?.(p, e);
   });
-  canvas.addEventListener('click', e => {
+  canvas.addEventListener('pointerup', e => {
     if (world._uiConsumed) {
       world._uiConsumed = false;
       e.preventDefault();

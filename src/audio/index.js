@@ -72,7 +72,31 @@ export function getAudio(name) {
 let _musicHandle = null;
 let _currentTrack = null;
 
+let _firstGesture = typeof document === 'undefined';
+let _pendingMusic = null;
+if (typeof document !== 'undefined') {
+  const unlock = () => {
+    _firstGesture = true;
+    for (const el of Object.values(_elements)) {
+      const p = el.play();
+      if (p?.then) p.then(() => { el.pause(); el.currentTime = 0; }).catch(() => {});
+    }
+    if (_pendingMusic) {
+      const { name, volume } = _pendingMusic;
+      _pendingMusic = null;
+      playMusic(name, volume);
+    }
+  };
+  document.addEventListener('pointerdown', unlock, { once: true, capture: true });
+  document.addEventListener('keydown', unlock, { once: true, capture: true });
+  document.addEventListener('touchstart', unlock, { once: true, capture: true });
+}
+
 async function playMusic(name, volume) {
+  if (!_firstGesture) {
+    _pendingMusic = { name, volume };
+    return;
+  }
   try {
     await loadAudio();
   } catch (e) {
