@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Kill Switch</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #0d0f14;
+        color: #d8d8d8;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      #stage {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #game {
+        background: #11141c;
+        /* render at native 1280x720; CSS scales to fit window preserving aspect */
+        width: min(100vw, calc(100vh * 16 / 9));
+        height: min(100vh, calc(100vw * 9 / 16));
+        touch-action: none;
+        user-select: none;
+      }
+    </style>
+    <!-- YouTube Playables SDK. Loads first; sync classic script so it
+         executes before the type=module game script below. -->
+    <script src="https://www.youtube.com/game_api/v1"></script>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="game" width="1280" height="720"></canvas>
+    </div>
+  </body>
+</html>
